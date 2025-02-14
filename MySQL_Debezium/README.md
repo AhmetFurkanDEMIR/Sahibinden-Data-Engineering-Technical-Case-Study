@@ -330,8 +330,10 @@ Kırılma/kesinti yaşayabileceğimi düşündüğüm üç nokta var
 
 **1-) Veritabanı kesintisi:** Hedef veritabanında, yani Debezium'un bağlandığı veritabanında bir kesinti olursa, bu durum benden kaynaklanmadığı için çözüm için DB yöneticileriyle iletişime geçerim. Kesinti tespiti için Prometheus ve Grafana üzerinden alert mailleri oluşturup, daha hızlı bir şekilde reaksiyon alabiliriz.
 
-**2-) Debezium kesintisi:** Kesintisiz veri akışı sağlamak için Debezium'u, veri boyutuna göre bir cluster olarak yapılandırır, CPU, RAM ve JVM ayarlarını optimize ederek deploy ederdim. Eğer veri hacmi çok büyükse, Flink CDC ile de cluster şeklinde denemeler yaparak performansı arttırmaya çalışırdım.
+**2-) Kafka kesintisi:** Kafka kesintisi olmaması ve veri kaybı yaşanmaması için topic de partition sayısını veriye göre ayarlardım. Kafka clusterının çökmemesi için 3 veya 5 brokerlı bir cluster oluştururdum
+
+**3-) Debezium kesintisi:** Kesintisiz veri akışı sağlamak için Debezium'u, veri boyutuna göre bir cluster olarak yapılandırır, CPU, RAM ve JVM ayarlarını optimize ederek deploy ederdim. Eğer veri hacmi çok büyükse, Flink CDC ile de cluster şeklinde denemeler yaparak performansı arttırmaya çalışırdım.
 
 Ancak, Debezium bir kesinti yaşarsa ve yeniden başlatılırsa, MySQL binlog kullanarak en son okunan offset bilgisi ile kaldığı yerden veri okumaya devam eder. Bu işlem, Debezium'un veritabanındaki her değişiklik için binlog position bilgisini takip etmesi sayesinde mümkün olur. Binlog position, veritabanındaki her işlemi sırasıyla kaydeder ve Debezium, bu konumu okuyarak işlem sırasını korur. Kesinti sonrasında, bu bilgilere dayalı olarak Debezium, veri kaybı olmadan doğru noktadan işlemlere devam eder. Bu yöntem, yüksek güvenilirlik ve veri bütünlüğü sağlar.
 
-**3-) Flink kesintisi:** Flink servisinin kesilip tekrar başlaması durumunda, Checkpointing yapılandırması yaparak, hata durumunda geri dönüp kaldığı yerden devam etmesini sağlardım. Ayrıca, verinin hatalı işlenmesi veya bir kesinti sonrasında tekrar işlenmesini önlemek için Exactly-once Semantics kullanırdım. Bu sayede verinin doğru ve sıralı bir şekilde işlenmesini garanti altına alırdım.
+**4-) Flink kesintisi:** Flink servisinin kesilip tekrar başlaması durumunda, Checkpointing yapılandırması yaparak, hata durumunda geri dönüp kaldığı yerden devam etmesini sağlardım. Ayrıca, verinin hatalı işlenmesi veya bir kesinti sonrasında tekrar işlenmesini önlemek için Exactly-once Semantics kullanırdım. Bu sayede verinin doğru ve sıralı bir şekilde işlenmesini garanti altına alırdım.
