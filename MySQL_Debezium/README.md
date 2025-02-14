@@ -13,7 +13,7 @@ docker compose up
 ```
 
 
-## Çalışma adımları, inceleme ve açıklamalar
+## Mimari servislerini inceleme ve açıklamalar
 
 
 ### **Volume ve network**
@@ -97,3 +97,81 @@ Yukarıdaki yaml dosyasından anlaşılacağı üzere 9092 portundan dışarıya
 Broker adresleri:
 - 0.0.0.0:9092
 - kafka:9092
+
+
+### **KafkaUI**
+
+```yaml
+kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - 8089:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - bigdata-network
+    restart: on-failure
+```
+
+KafkaUI servisi kafka brokerı olan kafka:9092 ile iletişim kurarak tüm topicleri ve mesajları çeker, bu verileri web üzerinden daha rahat ve kolay görmeye olanak sağlar.
+
+KafkaUI Link: [http://0.0.0.0:8089](http://0.0.0.0:8089)
+
+
+### **Debezium**
+
+```yaml
+debezium:
+    image: debezium/connect:3.0.0.Final
+    container_name: debezium_connect
+    restart: always
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: debezium_configs
+      OFFSET_STORAGE_TOPIC: debezium_offsets
+      STATUS_STORAGE_TOPIC: debezium_status
+    ports:
+      - "8083:8083"
+    networks:
+      - bigdata-network
+```
+
+Debezium, gerçek zamanlı veri değişikliklerini (change data capture - CDC) izlemek ve aktarmak için kullanılan açık kaynaklı bir araçtır. Veritabanlarındaki değişiklikleri (ekleme, güncelleme, silme) izler ve bu değişiklikleri Kafka gibi mesajlaşma sistemlerine ileterek, veri entegrasyonu ve analizi süreçlerini kolaylaştırır. Genellikle mikro hizmetler, veri göletleri ve veri ambarları için kullanılır.
+
+Debezium servisi 8083 portundan dışarıya açacak şekilde deploy edilmiştir.
+
+[http://0.0.0.0:8083/](http://0.0.0.0:8083/)
+
+
+### **data-generator**
+
+
+```yaml
+data-generator:
+    image: python:3.9
+    container_name: data_generator
+    volumes:
+      - ./data_generator.py:/app/data_generator.py
+      - ./init.sql:/app/init.sql
+    command: >
+      bash -c "pip install mysql-connector-python && pip install sqlparse && python /app/data_generator.py"
+    depends_on:
+      - mysql
+    networks:
+      - bigdata-network
+```
+
+Data generator, otomatik bir şekilde mysql içinde sahibinden adında bir tablo oluşturur ve bu tabloya saniyede bir veri insert eder.
+
+[Tablo oluşturma sql komutları](/MySQL_Debezium/init.sql)
+
+[Python ile saniyede bir veri insert etme scripti](/MySQL_Debezium/data_generator.py)

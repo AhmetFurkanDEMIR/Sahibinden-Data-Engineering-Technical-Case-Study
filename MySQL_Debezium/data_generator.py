@@ -3,7 +3,7 @@ import mysql.connector
 import sqlparse
 from datetime import datetime
 
-time.sleep(20)
+time.sleep(25)
 
 conn = mysql.connector.connect(
     host="mysql_db",
