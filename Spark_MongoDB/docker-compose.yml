@@ -1,0 +1,124 @@
+version: '3'
+
+services:
+
+  ### --- SPARK SERVICES ---- ###
+  spark-master:
+    image: bitnami/spark:3.5.0
+    container_name: spark-master
+    hostname: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_DAEMON_MEMORY=16g
+      - SPARK_WORKER_INSTANCES=2
+      - SPARK_EXECUTOR_MEMORY=16g
+      - SPARK_WORKER_CORES=8
+    ports:
+      - "8080:8080"  # Web UI için
+      - "7077:7077"  # Master URL
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker-1
+    hostname:  spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=8g
+      - SPARK_EXECUTOR_MEMORY=8g
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+
+  spark-worker-2:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker-2
+    hostname:  spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=8g
+      - SPARK_EXECUTOR_MEMORY=8g
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+    environment:
+      MONGO_INITDB_DATABASE: sahibinden
+    networks:
+      - spark-network
+
+  mysql_db_spark:
+    image: mysql:8.0
+    container_name: mysql_db_spark
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --binlog-row-image=FULL
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: sahibinden
+      MYSQL_PASSWORD: sahibinden
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_spark:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - spark-network
+
+  spark-submiter:
+    image: bitnami/spark:3.5.0
+    container_name: spark-submiter
+    depends_on:
+      - mysql_db_spark
+      - spark-master
+      - mongodb
+    command: [ "/bin/bash", "-c", "spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.2.0,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.input.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.output.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden /opt/spark_scripts/spark_submit.py" ]
+    volumes:
+      - ./spark_submit.py:/opt/spark_scripts/spark_submit.py
+    networks:
+      - spark-network
+
+
+networks:
+  spark-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
+
+  mysql_data_spark:
+    driver: local
