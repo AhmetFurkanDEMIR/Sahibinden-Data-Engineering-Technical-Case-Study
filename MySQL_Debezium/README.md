@@ -1,4 +1,5 @@
-#### **1.a.** Localinizde kuracağınız bir mysqli debezium mysql connector ile dinleyip, mysql loglarını kafka topicslerinde gösterecek şekilde bir akış oluşturur musunuz? 
+# **1.a.** 
+### **Localinizde kuracağınız bir mysqli debezium mysql connector ile dinleyip, mysql loglarını kafka topicslerinde gösterecek şekilde bir akış oluşturur musunuz?**
 
 ## **Mimari**
 
@@ -282,3 +283,7 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 - schema.history.internal.kafka.bootstrap.servers: Schema geçmişi için Kafka sunucusu.
 
 - schema.history.internal.kafka.topic: Schema geçmişi için Kafka topic adı.
+
+
+# **1.b.** 
+### **Buradaki kafka topiclerinde birilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.**
