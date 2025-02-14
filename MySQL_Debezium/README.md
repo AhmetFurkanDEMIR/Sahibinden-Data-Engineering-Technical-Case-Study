@@ -7,11 +7,42 @@
 
 ## Uygulamayı çalıştırma
 
+MySQL_Debezium projesine ilerleyin
+
+```yaml
+cd MySQL_Debezium
+```
+
+docker compose up komutunu terminalde çalıştırın ve projenin ayağa kalmasını bekleyin (25 Sn)
 
 ```yaml
 docker compose up
 ```
 
+![debezium_docker_run](/readme_images/debezium_docker_run.png)
+
+Oluşan "mysql-sahibinden-connector" adındaki connectoru görmek için aşağıdaki linke tıklayınız.
+
+[http://0.0.0.0:8083/connectors/mysql-sahibinden-connector](http://0.0.0.0:8083/connectors/mysql-sahibinden-connector)
+
+![debezium_connector](/readme_images/debezium_connector.png)
+
+Ardından, aşağıdaki KafkaUI servisine giderek Debezium'un MySQL'den algıladığı değişiklikleri yazdığı Kafka topiğini inceleyiniz.
+
+[http://0.0.0.0:8089/ui/clusters/kafka/all-topics/mysql.testdb.sahibinden/messages?keySerde=String&valueSerde=String&limit=100](http://0.0.0.0:8089/ui/clusters/kafka/all-topics/mysql.testdb.sahibinden/messages?keySerde=String&valueSerde=String&limit=100)
+
+[Veri akışını canlı olarak izlemek için](http://0.0.0.0:8089/ui/clusters/kafka/all-topics/mysql.testdb.sahibinden/messages?filterQueryType=STRING_CONTAINS&attempt=2&limit=100&page=0&seekDirection=TAILING&keySerde=String&valueSerde=String&seekType=LATEST)
+
+
+## Uygulamanın çalışma adımları
+
+* **1-)** MySQL servisinin deploy edilmesi
+* **2-)** Kafka'nın tek broker olarak deploy edilmesi
+* **3-)** Kafka ve KafkaUI servislerinin bağlantı kurması.
+* **4-)** Debezium'un deploy edilmesi ve Kafka ile bağlantısı
+* **5-)** data-generator ile sahibinden adında tablo oluşturulması ve saniyede bir veri insert edilmesi
+* **6-)** create-debezium-connector ile Debezium'da yeni bir connector oluşturma.
+* **7-)** Data-generator verileri MySQL'e yazarken, Debezium bu verileri MySQL'den CDC (Change Data Capture) aracılığıyla yakalayıp Kafka'ya produce etmektedir. Kullanıcı, bu verileri KafkaUI ile consume ederek projeyi inceleyebilmektedir.
 
 ## Mimari servislerini inceleme ve açıklamalar
 
