@@ -2,7 +2,7 @@
 
 ### **Gereklilikler**
 
-![druid](/readme_images/pngwing.com.png)
+![druid](/readme_images/docker.png)
 
 Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması gerekmektedir. [Kurulum linki (Ubuntu için)](https://docs.docker.com/engine/install/ubuntu/)
 
