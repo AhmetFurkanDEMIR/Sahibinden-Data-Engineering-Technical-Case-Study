@@ -44,6 +44,8 @@ Ardından, aşağıdaki KafkaUI servisine giderek Debezium'un MySQL'den algılad
 
 [Veri akışını canlı olarak izlemek için](http://0.0.0.0:8089/ui/clusters/kafka/all-topics/mysql.testdb.sahibinden/messages?filterQueryType=STRING_CONTAINS&attempt=2&limit=100&page=0&seekDirection=TAILING&keySerde=String&valueSerde=String&seekType=LATEST)
 
+![kafka_ui_debezium.png](/readme_images/kafka_ui_debezium.png)
+
 
 ## Uygulamanın çalışma adımları
 
