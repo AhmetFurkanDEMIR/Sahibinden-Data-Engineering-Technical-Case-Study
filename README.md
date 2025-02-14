@@ -8,14 +8,14 @@ Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması g
 
 Docker'ı kullanmamın sebebi, Case çalışmasını çalıştıracak kişinin bilgisayarında sorunsuz bir şekilde çalışmasını sağlamaktır. Hem platform bağımsız olarak hatasız çalışmasını sağlamak hem de yazılan uygulamaların daha sonrasında Docker Swarm ve Kubernetes üzerinde deploy edilmesini kolaylaştırmaktır.
 
-### 1-) [MySQL ve Debezium](/MySQL_Debezium/)
+## 1-) [MySQL ve Debezium](/MySQL_Debezium/)
 
 **1.a.** Localinizde kuracağınız bir mysqli debezium mysql connector ile dinleyip, mysql loglarını kafka topicslerinde gösterecek şekilde bir akış oluşturur musunuz? 
 
 **1.b.** Buradaki kafka topiclerinde birilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.
 
 
-### 2-) Spark ve MongoDB
+## 2-) Spark ve MongoDB
 
 **2.a.** Spark ile mongo dbden veri okuyup yazma:
 
@@ -35,7 +35,7 @@ c_c2 int
 **2.b.** Burada 500M'luk bir veri seti olsaydı, bu Spark jobını hangi ortamda nasıl çalıştırırdınız, yaklaşımınız ne olurdu? Sözel/text cevap veriniz.
 
 
-### 3-) Flink ve Kafka
+## 3-) Flink ve Kafka
 
 **3.a.** Apache Flink ile Kafka entegrasyonu yapıp, Kafka'dan JSON veri okuyup bu veriyi bazı hesaplamalar yaptıktan sonra 2 dakikada bir sonucu  local dosya sistemine csv olarak yazan pipeline oluşturun, örnek implementasyon yapar mısınız?
 
