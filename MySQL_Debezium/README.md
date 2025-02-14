@@ -298,4 +298,4 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 
 
 # **1.b.** 
-### **Buradaki kafka topiclerinde birilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.**
+### **Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.**
