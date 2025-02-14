@@ -44,7 +44,7 @@ Ardından, aşağıdaki KafkaUI servisine giderek Debezium'un MySQL'den algılad
 * **6-)** create-debezium-connector ile Debezium'da yeni bir connector oluşturma.
 * **7-)** Data-generator verileri MySQL'e yazarken, Debezium bu verileri MySQL'den CDC (Change Data Capture) aracılığıyla yakalayıp Kafka'ya produce etmektedir. Kullanıcı, bu verileri KafkaUI ile consume ederek projeyi inceleyebilmektedir.
 
-## Mimari servislerini inceleme ve açıklamalar
+## Mimariyi inceleme ve açıklamalar
 
 
 ### **Volume ve network**
