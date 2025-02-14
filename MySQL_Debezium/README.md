@@ -154,7 +154,6 @@ Debezium servisi 8083 portundan dışarıya açacak şekilde deploy edilmiştir.
 
 ### **data-generator**
 
-
 ```yaml
 data-generator:
     image: python:3.9
@@ -175,3 +174,80 @@ Data generator, otomatik bir şekilde mysql içinde sahibinden adında bir tablo
 [Tablo oluşturma sql komutları](/MySQL_Debezium/init.sql)
 
 [Python ile saniyede bir veri insert etme scripti](/MySQL_Debezium/data_generator.py)
+
+
+### **create-debezium-connector**
+
+```yaml
+create-debezium-connector:
+    image: curlimages/curl:latest
+    container_name: create-debezium-connector
+    depends_on:
+      - debezium
+    entrypoint: ["sh", "-c", "sleep 25 && curl -X POST http://debezium_connect:8083/connectors/ -H 'Content-Type: application/json' -d '{\"name\": \"mysql-sahibinden-connector\", \"config\": {\"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\", \"tasks.max\": \"1\", \"database.hostname\": \"mysql_db\", \"database.port\": \"3306\", \"database.user\": \"root\", \"database.password\": \"root\", \"database.server.id\": \"184054\", \"database.server.name\": \"mysql_server\", \"database.whitelist\": \"testdb\", \"database.history.kafka.bootstrap.servers\": \"kafka:9092\", \"database.history.kafka.topic\": \"dbhistory.fullfillment\", \"table.whitelist\": \"testdb.sahibinden\", \"database.history.producer.bootstrap.servers\": \"kafka:9092\", \"database.history.producer.topic\": \"dbhistory\", \"topic.prefix\": \"mysql\", \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\", \"schema.history.internal.kafka.topic\": \"dbhistory.schema\"} }'"]
+    networks:
+      - bigdata-network
+```
+
+create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırılmış JSON dosyasını debezium_connect:8083 adresine POST yöntemiyle göndererek yeni bir Debezium connector oluşturmayı sağlıyorum.
+
+```json
+{
+  "name": "mysql-sahibinden-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "mysql_db",
+    "database.port": "3306",
+    "database.user": "root",
+    "database.password": "root",
+    "database.server.id": "184054",
+    "database.server.name": "mysql_server",
+    "database.whitelist": "testdb",
+    "database.history.kafka.bootstrap.servers": "kafka:9092",
+    "database.history.kafka.topic": "dbhistory.fullfillment",
+    "table.whitelist": "testdb.sahibinden",
+    "database.history.producer.bootstrap.servers": "kafka:9092",
+    "database.history.producer.topic": "dbhistory",
+    "topic.prefix": "mysql",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+    "schema.history.internal.kafka.topic": "dbhistory.schema"
+  }
+}
+```
+
+- name: Connector'ın adı. Bu örnekte "mysql-sahibinden-connector".
+
+- connector.class: Kullanılacak Debezium connector tipi. Burada MySQL için io.debezium.connector.mysql.MySqlConnector kullanılıyor.
+
+- tasks.max: Maksimum paralel görev sayısı. 
+
+- database.hostname: Veritabanı sunucusunun adresi. 
+
+- database.port: MySQL veritabanının portu. Varsayılan olarak 3306 kullanılır.
+
+- database.user: Veritabanı bağlantısı için kullanıcı adı.
+
+- database.password: Veritabanı kullanıcı şifresi.
+
+- database.server.id: Veritabanı sunucusunun benzersiz ID'si.
+
+- database.server.name: Kafka topic prefix'i olarak kullanılacak sunucu adı.
+
+- database.whitelist: İzlenecek veritabanları. Burada yalnızca "testdb" veritabanı izleniyor.
+
+- database.history.kafka.bootstrap.servers: Kafka sunucusunun adresi.
+
+- database.history.kafka.topic: Veritabanı geçmişi bilgilerini saklayacak Kafka topic adı.
+
+- table.whitelist: İzlenecek tablo. Bu örnekte "testdb.sahibinden" tablosu izlenecek.
+
+- database.history.producer.bootstrap.servers: Kafka'ya bağlanacak olan producer'ın sunucu adresi.
+
+- database.history.producer.topic: Veritabanı geçmişi için kullanılan Kafka topic adı.
+
+- topic.prefix: Kafka topic adı için ön ek. Bu örnekte "mysql"
+
+- schema.history.internal.kafka.bootstrap.servers: Schema geçmişi için Kafka sunucusu.
+
+- schema.history.internal.kafka.topic: Schema geçmişi için Kafka topic adı.
