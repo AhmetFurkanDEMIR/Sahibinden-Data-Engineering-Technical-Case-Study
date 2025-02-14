@@ -91,6 +91,19 @@ services:
     networks:
       - bigdata-network
 
+  upsert_merge:
+    image: python:3.9
+    container_name: upsert_merge
+    volumes:
+      - ./upsert_merge.py:/app/upsert_merge.py
+    command: >
+      bash -c "pip install kafka-python mysql-connector-python confluent-kafka && python /app/upsert_merge.py"
+    depends_on:
+      - mysql
+      - kafka
+    networks:
+      - bigdata-network
+
 networks:
   bigdata-network:
     driver: bridge

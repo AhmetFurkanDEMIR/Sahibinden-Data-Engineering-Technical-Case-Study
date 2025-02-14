@@ -299,3 +299,39 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 
 # **1.b.** 
 ### **Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.**
+
+* **1.b.1** Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz:
+
+Flink veya Spark kullanarak bu işlemi yapardım. Öncelikle, veri boyutuma göre bir Kubernetes kümesi oluşturur ve bunun üzerinde Jobmanager/Taskmanager yapılandırmaları tamamlanmış bir Flink kümesi deploy ederdim.
+
+Ardından, Python veya Scala programlama dilleri ile Debezium'un aktardığı JSON verisini Kafka topic'inden çekip parçalardım ve geriye kalan anlamlı veriyi upsert/merge işlemlerine uygun hale getirip hedef veritabanında insert/update/delete işlemlerini gerçekleştirirdim. Bahsettiğim örneğe benzer şekilde bu JSON verisini Kafka'dan çekip anlamlı hale getirip, daha sonra hedef veritabanına aktarmak için basit bir Python betiği oluşturdum ([upsert_merge.py](/MySQL_Debezium/upsert_merge.py)). Bu betiği Flink'e uyarlayıp paralel bir şekilde çalıştırmayı hedeflerdim.
+
+Aşağıdaki resimde, yine aynı veritabanasında farklı bir tabloya upsert/merge işlemi sonucunda verilerin yazıldığını görebilirsiniz.
+![upsert_merge](/readme_images/upsert_merge.png)
+
+```yaml
+  upsert_merge:
+    image: python:3.9
+    container_name: upsert_merge
+    volumes:
+      - ./upsert_merge.py:/app/upsert_merge.py
+    command: >
+      bash -c "pip install kafka-python mysql-connector-python confluent-kafka && python /app/upsert_merge.py"
+    depends_on:
+      - mysql
+      - kafka
+    networks:
+      - bigdata-network
+```
+
+* **1.b.2** Kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.
+
+Kırılma/kesinti yaşayabileceğimi düşündüğüm üç nokta var
+
+**1-) Veritabanı kesintisi:** Hedef veritabanında, yani Debezium'un bağlandığı veritabanında bir kesinti olursa, bu durum benden kaynaklanmadığı için çözüm için DB yöneticileriyle iletişime geçerim. Kesinti tespiti için Prometheus ve Grafana üzerinden alert mailleri oluşturup, daha hızlı bir şekilde reaksiyon alabiliriz.
+
+**2-) Debezium kesintisi:** Kesintisiz veri akışı sağlamak için Debezium'u, veri boyutuna göre bir cluster olarak yapılandırır, CPU, RAM ve JVM ayarlarını optimize ederek deploy ederdim. Eğer veri hacmi çok büyükse, Flink CDC ile de cluster şeklinde denemeler yaparak performansı arttırmaya çalışırdım.
+
+Ancak, Debezium bir kesinti yaşarsa ve yeniden başlatılırsa, MySQL binlog kullanarak en son okunan offset bilgisi ile kaldığı yerden veri okumaya devam eder. Bu işlem, Debezium'un veritabanındaki her değişiklik için binlog position bilgisini takip etmesi sayesinde mümkün olur. Binlog position, veritabanındaki her işlemi sırasıyla kaydeder ve Debezium, bu konumu okuyarak işlem sırasını korur. Kesinti sonrasında, bu bilgilere dayalı olarak Debezium, veri kaybı olmadan doğru noktadan işlemlere devam eder. Bu yöntem, yüksek güvenilirlik ve veri bütünlüğü sağlar.
+
+**3-) Flink kesintisi:** Flink servisinin kesilip tekrar başlaması durumunda, Checkpointing yapılandırması yaparak, hata durumunda geri dönüp kaldığı yerden devam etmesini sağlardım. Ayrıca, verinin hatalı işlenmesi veya bir kesinti sonrasında tekrar işlenmesini önlemek için Exactly-once Semantics kullanırdım. Bu sayede verinin doğru ve sıralı bir şekilde işlenmesini garanti altına alırdım.

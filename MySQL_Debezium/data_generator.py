@@ -25,12 +25,11 @@ conn.commit()
 while True:
     title = f"Ürün {int(time.time())}"
     description = "Test Aciklama"
-    price = 100.0
     seller = "Test Satıcı"
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    query = "INSERT INTO sahibinden (title, description, price, seller, created_at) VALUES (%s, %s, %s, %s, %s)"
-    values = (title, description, price, seller, created_at)
+    query = "INSERT INTO sahibinden (title, description, price, seller, created_at) VALUES (%s, %s, 100, %s, %s)"
+    values = (title, description, seller, created_at)
 
     cursor.execute(query, values)
     conn.commit()
