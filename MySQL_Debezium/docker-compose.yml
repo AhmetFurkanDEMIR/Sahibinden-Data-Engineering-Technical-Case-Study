@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: debezium
+      MYSQL_PASSWORD: debezium
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --binlog-row-image=FULL
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - bigdata-network
+
+  kafka:
+    image: docker.io/bitnami/kafka:3.6
+    restart: always
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - 9092:9092
+      - 9093:9093
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    networks:
+      - bigdata-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - 8089:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - bigdata-network
+    restart: on-failure
+
+  debezium:
+    image: debezium/connect:3.0.0.Final
+    container_name: debezium_connect
+    restart: always
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: debezium_configs
+      OFFSET_STORAGE_TOPIC: debezium_offsets
+      STATUS_STORAGE_TOPIC: debezium_status
+    ports:
+      - "8083:8083"
+    networks:
+      - bigdata-network
+
+  data-generator:
+    image: python:3.9
+    container_name: data_generator
+    volumes:
+      - ./data_generator.py:/app/data_generator.py
+      - ./init.sql:/app/init.sql
+    command: >
+      bash -c "pip install mysql-connector-python && pip install sqlparse && python /app/data_generator.py"
+    depends_on:
+      - mysql
+    networks:
+      - bigdata-network
+
+  create-debezium-connector:
+    image: curlimages/curl:latest
+    container_name: create-debezium-connector
+    depends_on:
+      - debezium
+    entrypoint: ["sh", "-c", "sleep 20 && curl -X POST http://debezium_connect:8083/connectors/ -H 'Content-Type: application/json' -d '{\"name\": \"mysql-sahibinden-connector\", \"config\": {\"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\", \"tasks.max\": \"1\", \"database.hostname\": \"mysql_db\", \"database.port\": \"3306\", \"database.user\": \"root\", \"database.password\": \"root\", \"database.server.id\": \"184054\", \"database.server.name\": \"mysql_server\", \"database.whitelist\": \"testdb\", \"database.history.kafka.bootstrap.servers\": \"kafka:9092\", \"database.history.kafka.topic\": \"dbhistory.fullfillment\", \"table.whitelist\": \"testdb.sahibinden\", \"database.history.producer.bootstrap.servers\": \"kafka:9092\", \"database.history.producer.topic\": \"dbhistory\", \"topic.prefix\": \"mysql\", \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\", \"schema.history.internal.kafka.topic\": \"dbhistory.schema\"} }'"]
+    networks:
+      - bigdata-network
+
+networks:
+  bigdata-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+
