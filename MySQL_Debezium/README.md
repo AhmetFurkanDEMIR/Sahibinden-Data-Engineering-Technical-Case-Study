@@ -20,6 +20,16 @@ docker compose up komutunu terminalde çalıştırın ve projenin ayağa kalmas�
 docker compose up
 ```
 
+Eğer ilk kez çalıştırıyorsanız, Docker Hub üzerinden ihtiyaç duyulan imajlar bir defaya mahsus lokal bilgisayarınıza çekilecektir.
+
+[MySQL DockerHub](https://hub.docker.com/_/mysql)
+
+[Kafka DockerHub](https://hub.docker.com/r/bitnami/kafka)
+
+[KafkaUI DockerHub](https://hub.docker.com/r/provectuslabs/kafka-ui)
+
+[Debezium DockerHub](https://hub.docker.com/r/debezium/connect)
+
 ![debezium_docker_run](/readme_images/debezium_docker_run.png)
 
 Oluşan "mysql-sahibinden-connector" adındaki connectoru görmek için aşağıdaki linke tıklayınız.
