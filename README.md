@@ -8,6 +8,8 @@ Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması g
 
 Docker'ı kullanmamın sebebi, Case çalışmasını çalıştıracak kişinin bilgisayarında sorunsuz bir şekilde çalışmasını sağlamaktır. Hem platform bağımsız olarak hatasız çalışmasını sağlamak hem de yazılan uygulamaların daha sonrasında Docker Swarm ve Kubernetes üzerinde deploy edilmesini kolaylaştırmaktır.
 
+Yazılan tüm kodlar ve servisler, otomatik olarak Docker ile deploy edilecek şekilde yapılandırılmıştır. Proje, çalışırken insan faktörünü minimize ederek hata oranını azaltmayı hedeflemektedir.
+
 ## 1-) [MySQL ve Debezium](/MySQL_Debezium/)
 
 **1.a.** Localinizde kuracağınız bir mysqli debezium mysql connector ile dinleyip, mysql loglarını kafka topicslerinde gösterecek şekilde bir akış oluşturur musunuz? 
