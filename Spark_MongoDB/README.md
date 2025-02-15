@@ -276,7 +276,7 @@ spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mon
 
 **Spark Yapılandırması:**
 
-* Spark 3.54
+* Spark 3.5.4
 * Scala 2.12
 * MongoDB Jar: org.mongodb.spark:mongo-spark-connector_2.12:10.4.1
 * MySQL Jar: mysql:mysql-connector-java:8.0.33
