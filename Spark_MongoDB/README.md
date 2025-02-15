@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS explode_table (
 Son aşama olarak spark-submiter ile [spark_submit.py](/Spark_MongoDB/spark_submit.py) dosyası Spark clusterına submit edilir. Spark, MongoDB deki verileri okuyup işlemleri tamamlandıktan sonra MySQL de ki testdb.explode_table'a yazma işlemini yapar.
 
 ![explode_table](/readme_images/explode_table.png)
+
 (MongoDB deki veriyi istenilen formata uygun olarak MySQL'e yazmak)
 
 ## Uygulamanın çalışma adımları
