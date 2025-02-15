@@ -12,12 +12,16 @@ Yazılan tüm kodlar ve servisler, otomatik olarak Docker ile deploy edilecek ş
 
 ## 1-) [MySQL ve Debezium](/MySQL_Debezium/)
 
+![1_mimari](/readme_images/1_mimari.png)
+
 [**1.a.**](/MySQL_Debezium/) Localinizde kuracağınız bir mysqli debezium mysql connector ile dinleyip, mysql loglarını kafka topicslerinde gösterecek şekilde bir akış oluşturur musunuz?
 
 [**1.b.**](/MySQL_Debezium/) Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.
 
 
 ## 2-) [Spark ve MongoDB](/Spark_MongoDB/)
+
+![spark_mongodb_mysql](/readme_images/spark_mongodb_mysql.png)
 
 [**2.a.**](/Spark_MongoDB/) Spark ile mongo dbden veri okuyup yazma:
 
