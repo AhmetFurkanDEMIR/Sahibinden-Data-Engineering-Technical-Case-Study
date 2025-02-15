@@ -305,7 +305,7 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 
 - schema.history.internal.kafka.topic: Schema geçmişi için Kafka topic adı.
 
-**Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
+### **Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
 
 ```yaml
 docker compose down

@@ -353,7 +353,7 @@ df_flat.write.format("jdbc") \
     .save()
 ```
 
-**Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
+### **Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
 
 ```yaml
 docker compose down
