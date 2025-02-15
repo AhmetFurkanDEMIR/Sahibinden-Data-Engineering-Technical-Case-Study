@@ -36,6 +36,12 @@ cd Spark_MongoDB
 
 docker compose up komutunu terminalde çalıştırın ve projenin ayağa kalmasını bekleyin (15 Sn)
 
+```yaml
+docker compose up
+
+# or docker-compose up
+```
+
 ![mysql_mongo_spark_run](/readme_images/mysql_mongo_spark_run.png)
 
 Eğer ilk kez çalıştırıyorsanız, Docker Hub üzerinden ihtiyaç duyulan imajlar bir defaya mahsus lokal bilgisayarınıza çekilecektir.

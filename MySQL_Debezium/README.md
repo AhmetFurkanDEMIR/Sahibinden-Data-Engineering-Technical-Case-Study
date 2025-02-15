@@ -18,6 +18,8 @@ docker compose up komutunu terminalde çalıştırın ve projenin ayağa kalmas�
 
 ```yaml
 docker compose up
+
+# or docker-compose up
 ```
 
 Eğer ilk kez çalıştırıyorsanız, Docker Hub üzerinden ihtiyaç duyulan imajlar bir defaya mahsus lokal bilgisayarınıza çekilecektir.
