@@ -322,7 +322,7 @@ Flink veya Spark kullanarak bu işlemi yapardım. Öncelikle, veri boyutuma gör
 
 Ardından, Python veya Scala programlama dilleri ile Debezium'un aktardığı JSON verisini Kafka topic'inden çekip parçalardım ve geriye kalan anlamlı veriyi upsert/merge işlemlerine uygun hale getirip hedef veritabanında insert/update/delete işlemlerini gerçekleştirirdim. Bahsettiğim örneğe benzer şekilde bu JSON verisini Kafka'dan çekip anlamlı hale getirip, daha sonra hedef veritabanına aktarmak için basit bir Python betiği oluşturdum ([upsert_merge.py](/MySQL_Debezium/upsert_merge.py)). Bu betiği Flink'e uyarlayıp paralel bir şekilde çalıştırmayı hedeflerdim.
 
-Aşağıdaki resimde, yine aynı veritabanasında farklı bir tabloya upsert/merge işlemi sonucunda verilerin yazıldığını görebilirsiniz.
+Aşağıdaki resimde, yine aynı veritabanında farklı bir tabloya upsert/merge işlemi sonucunda verilerin yazıldığını görebilirsiniz.
 ![upsert_merge](/readme_images/upsert_merge.png)
 
 ```yaml
