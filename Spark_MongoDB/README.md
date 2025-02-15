@@ -274,6 +274,13 @@ spark-submiter:
 spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.cores.max=2 --conf spark.driver.memory=4g /opt/spark_scripts/spark_submit.py
 ```
 
+**Spark Yapılandırması:**
+
+* Spark 3.54
+* Scala 2.12
+* MongoDB Jar: org.mongodb.spark:mongo-spark-connector_2.12:10.4.1
+* MySQL Jar: mysql:mysql-connector-java:8.0.33
+
 spark-submit komutu
 
 ### **[spark_submit.py](/Spark_MongoDB/spark_submit.py)**
