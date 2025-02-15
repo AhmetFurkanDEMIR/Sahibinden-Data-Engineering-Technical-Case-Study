@@ -1,0 +1,22 @@
+{"id": 0, "product": "Araba", "description": "ikinci el opel araba", "price": 900000, "kdv": 0.30}
+{"id": 1, "product": "Telefon", "description": "sıfır samsung telefon", "price": 50000, "kdv": 0.10}
+{"id": 2, "product": "Araba", "description": "sıfır reno araba", "price": 1500000, "kdv": 0.35}
+{"id": 3, "product": "Ev", "description": "5 yaşında ev", "price": 100000000, "kdv": 0.95}
+{"id": 4, "product": "Araba", "description": "ikinci el dacia araba", "price": 950000, "kdv": 0.34}
+{"id": 5, "product": "Bilgisayar", "description": "ikinci el macbook", "price": 25000, "kdv": 0.20}
+{"id": 6, "product": "Saat", "description": "ikinci el rolex saat", "price": 75000, "kdv": 0.15}
+{"id": 7, "product": "Televizyon", "description": "ikinci el LG OLED TV", "price": 18000, "kdv": 0.18}
+{"id": 8, "product": "Motosiklet", "description": "ikinci el honda motosiklet", "price": 120000, "kdv": 0.25}
+{"id": 9, "product": "Tablet", "description": "ikinci el iPad Pro", "price": 17000, "kdv": 0.12}
+{"id": 10, "product": "Kamera", "description": "ikinci el Canon DSLR", "price": 22000, "kdv": 0.14}
+{"id": 11, "product": "Koltuk Takımı", "description": "ikinci el lüks koltuk takımı", "price": 35000, "kdv": 0.22}
+{"id": 12, "product": "Araba", "description": "ikinci el BMW araba", "price": 1300000, "kdv": 0.38}
+{"id": 13, "product": "Telefon", "description": "ikinci el iPhone 12", "price": 32000, "kdv": 0.11}
+{"id": 14, "product": "Buzdolabı", "description": "ikinci el Samsung buzdolabı", "price": 19000, "kdv": 0.17}
+{"id": 15, "product": "Bilgisayar", "description": "ikinci el gaming laptop", "price": 42000, "kdv": 0.20}
+{"id": 16, "product": "Bisiklet", "description": "ikinci el dağ bisikleti", "price": 7500, "kdv": 0.10}
+{"id": 17, "product": "Ev", "description": "15 yaşında daire", "price": 85000000, "kdv": 0.90}
+{"id": 18, "product": "Araba", "description": "ikinci el mercedes araba", "price": 1400000, "kdv": 0.40}
+{"id": 19, "product": "Monitör", "description": "ikinci el 27 inç gaming monitör", "price": 12000, "kdv": 0.14}
+{"id": 20, "product": "Ses Sistemi", "description": "ikinci el Bose ses sistemi", "price": 28000, "kdv": 0.19}
+{"id": 21, "product": "Araba", "description": "ikinci el hyundai araba", "price": 800000, "kdv": 0.30}

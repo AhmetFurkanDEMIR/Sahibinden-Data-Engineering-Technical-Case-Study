@@ -112,6 +112,18 @@ services:
     networks:
       - spark-network
 
+  cloudbeaver-spark:
+    image: dbeaver/cloudbeaver:24.3.4
+    restart: always
+    ports:
+      - '8978:8978'
+    volumes: 
+      - ./cloudbeaver/:/opt/cloudbeaver/workspace 
+    read_only: false
+    networks:
+      - spark-network
+    # username: sahibinden, password: Sahibinden*123
+
 
 networks:
   spark-network:

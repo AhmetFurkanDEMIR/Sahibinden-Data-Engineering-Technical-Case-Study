@@ -81,6 +81,14 @@ Son aşama olarak spark-submiter ile [spark_submit.py](/Spark_MongoDB/spark_subm
 
 (MongoDB deki veriyi istenilen formata uygun olarak MySQL'e yazmak)
 
+
+MySQL de ki explode_table'i görmek için Cloudbeaver linkine tıklayınız. [http://0.0.0.0:8978](http://0.0.0.0:8978)
+
+- Cloudbeaver username: sahibinden
+- Cloudbeaver password: Sahibinden*123
+
+![cloudbeaver_debezium](/readme_images/cloudbeaver_spark.png)
+
 ## Uygulamanın çalışma adımları
 
 * **1-)** MySQL servisinin deploy edilmesi ve tablonun oluşturulması
@@ -343,6 +351,14 @@ df_flat.write.format("jdbc") \
     .option("password", "sahibinden") \
     .mode("append") \
     .save()
+```
+
+**Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
+
+```yaml
+docker compose down
+
+# or docker-compose down
 ```
 
 # **2.b.** 

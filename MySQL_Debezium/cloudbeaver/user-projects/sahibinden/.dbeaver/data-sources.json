@@ -1,0 +1,40 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-1950b97eb9e-5048997e1baccd9a": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "MySQL_Debezium",
+			"description": "MySQL_Debezium Projesi",
+			"save-password": true,
+			"configuration": {
+				"host": "mysql",
+				"port": "3306",
+				"url": "jdbc:mysql://mysql:3306/",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"auth-model": "native",
+				"bootstrap": {
+					"autocommit": true
+				}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}

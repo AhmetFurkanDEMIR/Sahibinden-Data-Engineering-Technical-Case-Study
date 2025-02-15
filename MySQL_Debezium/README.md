@@ -48,6 +48,13 @@ Ardından, aşağıdaki KafkaUI servisine giderek Debezium'un MySQL'den algılad
 
 ![kafka_ui_debezium.png](/readme_images/kafka_ui_debezium.png)
 
+Debezium'un connect olduğu hedef MySQL veritabanını görmek için Cloudbeaver linkine tıklayınız. [http://0.0.0.0:8978](http://0.0.0.0:8978)
+
+- Cloudbeaver username: sahibinden
+- Cloudbeaver password: Sahibinden*123
+
+![cloudbeaver_debezium](/readme_images/cloudbeaver_debezium.png)
+
 
 ## Uygulamanın çalışma adımları
 
@@ -298,6 +305,13 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 
 - schema.history.internal.kafka.topic: Schema geçmişi için Kafka topic adı.
 
+**Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
+
+```yaml
+docker compose down
+
+# or docker-compose down
+```
 
 # **1.b.** 
 ### **Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.**

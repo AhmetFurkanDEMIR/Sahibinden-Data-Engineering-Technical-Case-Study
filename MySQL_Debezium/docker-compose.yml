@@ -104,6 +104,18 @@ services:
     networks:
       - bigdata-network
 
+  cloudbeaver-debezium:
+    image: dbeaver/cloudbeaver:24.3.4
+    restart: always
+    ports:
+      - '8978:8978'
+    volumes: 
+      - ./cloudbeaver/:/opt/cloudbeaver/workspace 
+    read_only: false
+    networks:
+      - bigdata-network
+    # username: sahibinden, password: Sahibinden*123
+
 networks:
   bigdata-network:
     driver: bridge
