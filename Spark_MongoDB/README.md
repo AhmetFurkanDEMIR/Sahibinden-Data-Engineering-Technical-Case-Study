@@ -156,6 +156,8 @@ mongodb:
 
 27017 portundan dışarıyla iletişim kurabilecek şekilde MongoDB servisinin deploy edilmesi.
 
+MongoDB connection string: mongodb://0.0.0.0:27017/
+
 ```yaml
 
     volumes:
