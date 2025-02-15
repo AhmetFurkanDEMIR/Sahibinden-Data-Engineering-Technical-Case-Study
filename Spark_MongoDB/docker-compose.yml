@@ -106,7 +106,7 @@ services:
       - spark-master
       - mongodb
     command: >
-      bash -c "sleep 15 && spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden /opt/spark_scripts/spark_submit.py"
+      bash -c "sleep 15 && spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.cores.max=2 --conf spark.driver.memory=4g /opt/spark_scripts/spark_submit.py"
     volumes:
       - ./spark_submit.py:/opt/spark_scripts/spark_submit.py
     networks:

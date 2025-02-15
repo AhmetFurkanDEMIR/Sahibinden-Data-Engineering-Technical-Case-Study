@@ -34,17 +34,7 @@ df_flat = df.withColumn("c", explode(col("c"))) \
             .withColumn("c_c1", col("c.c1")) \
             .withColumn("c_c2", col("c.c2")) \
             .select("a", "b", "c_c1", "c_c2")
-
-window_spec = Window.partitionBy("a", "b").orderBy("c_c1")
-
-
-df_flat = df_flat.withColumn("row_num", row_number().over(window_spec)) \
-                   .filter(col("row_num") == 1) \
-                   .drop("row_num")
-
 df_flat.show()
-
-
 df_flat.printSchema()
 
 

@@ -83,3 +83,54 @@ Son aşama olarak spark-submiter ile [spark_submit.py](/Spark_MongoDB/spark_subm
 * **5-)** spark_submit.py içindeki işlemler ile MongoDB verilerini explode edip MySQL deki tabloya verilerin yazılması
 
 ## Mimariyi inceleme ve açıklamalar
+
+### **Volume ve network**
+
+```yaml
+networks:
+  spark-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
+
+  mysql_data_spark:
+    driver: local
+```
+
+Yukarıdaki yaml dosyasında okunacağı üzere tüm servislerin sağlıklı çalışabilmesi için spark-network adında bir network tanımlanmıştır.
+
+mysql servisi içinde mysql_data_spark adında bir volume tanımlanmıştır, böylece mysql servisi restart olsa bile tablolar ve veriler kaybolmayacaktır. Aynı işlem mongo_data adındaki volume ile MongoDB'ye de sağlanmıştır.
+
+### **MySQL**
+
+```yaml
+mysql_db_spark:
+    image: mysql:8.0
+    container_name: mysql_db_spark
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --binlog-row-image=FULL
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: sahibinden
+      MYSQL_PASSWORD: sahibinden
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_spark:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - spark-network
+```
+
+Yukarıda mysql servisinin yapılandırmasını görebilirsiniz. Mysql docker imajını kullanarak 3306 portundan servisi ayağa kaldırmaktadır.
+
+- MySQL host: 0.0.0.0:3306
+- MySQL DB: testdb
+- MySQL Root user: root
+- MySQL Root password: root
+- MySQL user: sahibinden
+- MySQL password: sahibinden
+
