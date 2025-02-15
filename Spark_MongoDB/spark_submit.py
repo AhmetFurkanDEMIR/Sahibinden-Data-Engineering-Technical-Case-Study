@@ -17,7 +17,7 @@ spark = SparkSession.builder \
     .config("spark.cores.max", 2) \
     .getOrCreate()
 
-
+# verileri MongoDB den okuma
 df = spark.read \
     .format("mongodb") \
     .option("uri", "mongodb://mongodb:27017/sahibinden") \
@@ -30,6 +30,7 @@ df.show()
 
 df.printSchema()
 
+# explode işlemi, c satırındaki verileri c_1 ve c_2 olarak ekleme
 df_flat = df.withColumn("c", explode(col("c"))) \
             .withColumn("c_c1", col("c.c1")) \
             .withColumn("c_c2", col("c.c2")) \
@@ -37,7 +38,7 @@ df_flat = df.withColumn("c", explode(col("c"))) \
 df_flat.show()
 df_flat.printSchema()
 
-
+# mysql'e yazma
 df_flat.write.format("jdbc") \
     .option("url", "jdbc:mysql://mysql_db_spark:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true") \
     .option("driver", "com.mysql.cj.jdbc.Driver") \

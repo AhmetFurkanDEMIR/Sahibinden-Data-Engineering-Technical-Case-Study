@@ -127,6 +127,8 @@ mysql_db_spark:
 
 Yukarıda mysql servisinin yapılandırmasını görebilirsiniz. Mysql docker imajını kullanarak 3306 portundan servisi ayağa kaldırmaktadır.
 
+[init.sql](/Spark_MongoDB/init.sql) dosyası ile otomatik olarak tablo oluşturulur.
+
 - MySQL host: 0.0.0.0:3306
 - MySQL DB: testdb
 - MySQL Root user: root
@@ -134,3 +136,195 @@ Yukarıda mysql servisinin yapılandırmasını görebilirsiniz. Mysql docker im
 - MySQL user: sahibinden
 - MySQL password: sahibinden
 
+### **MongoDB**
+
+```yaml
+mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+    environment:
+      MONGO_INITDB_DATABASE: sahibinden
+    networks:
+      - spark-network
+```
+
+27017 portundan dışarıyla iletişim kurabilecek şekilde MongoDB servisinin deploy edilmesi.
+
+```yaml
+
+    volumes:
+      - mongo_data:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+```
+
+[init.js](/Spark_MongoDB/init.js) dosyası ile veriler MongoDB ye insert edilir. 
+
+
+### **Spark Cluster**
+
+```yaml
+spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    hostname: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_DAEMON_MEMORY=16g
+      - SPARK_WORKER_INSTANCES=2
+      - SPARK_EXECUTOR_MEMORY=16g
+      - SPARK_WORKER_CORES=8
+    ports:
+      - "8080:8080"  # Web UI için
+      - "7077:7077"  # Master URL
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: bitnami/spark:latest
+    container_name: spark-worker-1
+    hostname:  spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=8g
+      - SPARK_EXECUTOR_MEMORY=8g
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+
+  spark-worker-2:
+    image: bitnami/spark:latest
+    container_name: spark-worker-2
+    hostname:  spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=8g
+      - SPARK_EXECUTOR_MEMORY=8g
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: "8"  # Increase the number of CPUs
+          memory: "16G"  # Increase the amount of memory
+    restart: on-failure
+    networks:
+      - spark-network
+```
+
+1 master 2 worker olacak şekilde Spark clusterı deploy edilir.
+
+```yaml
+resources:
+    limits:
+        cpus: "8"  # Increase the number of CPUs
+        emory: "16G"  # Increase the amount of memory
+
+```
+
+Her worker için 8 CPU ve 16GB memory ayarlanmıştır.
+
+- Spark master web url: [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
+- Spark master url: spark://spark-master:7077
+
+### **Spark Submiter**
+
+```yaml
+spark-submiter:
+    image: bitnami/spark:latest
+    container_name: spark-submiter
+    depends_on:
+      - mysql_db_spark
+      - spark-master
+      - mongodb
+    command: >
+      bash -c "sleep 15 && spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.cores.max=2 --conf spark.driver.memory=4g /opt/spark_scripts/spark_submit.py"
+    volumes:
+      - ./spark_submit.py:/opt/spark_scripts/spark_submit.py
+    networks:
+      - spark-network
+```
+
+[spark_submit.py](/Spark_MongoDB/spark_submit.py) dosyasını Spark clusterına submit eden container.
+
+```yaml
+spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.cores.max=2 --conf spark.driver.memory=4g /opt/spark_scripts/spark_submit.py
+```
+
+spark-submit komutu
+
+### **[spark_submit.py](/Spark_MongoDB/spark_submit.py)**
+
+Bu Python scripti içerisinde MongoDB den veriler okunup explode edilip ardından MySQL'e yazma işlemini yapar.
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, explode, row_number
+from pyspark import SparkContext,SparkConf
+from pyspark.sql.window import Window
+
+conf = SparkConf().set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.12:10.4.1")
+sc = SparkContext(conf=conf)
+
+# Spark Session oluşturma
+spark = SparkSession.builder \
+    .appName("MongoDB to SQL") \
+    .master("spark://spark-master:7077") \
+    .config('spark.jars.packages', 'org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33')\
+    .config("spark.mongodb.read.connection.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
+    .config("spark.mongodb.write.connection.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.cores.max", 2) \
+    .getOrCreate()
+
+# verileri MongoDB den okuma
+df = spark.read \
+    .format("mongodb") \
+    .option("uri", "mongodb://mongodb:27017/sahibinden") \
+    .option("database", "sahibinden") \
+    .option("collection", "collection1") \
+    .load()
+
+
+df.show()
+
+df.printSchema()
+
+# explode işlemi, c satırındaki verileri c_1 ve c_2 olarak ekleme
+df_flat = df.withColumn("c", explode(col("c"))) \
+            .withColumn("c_c1", col("c.c1")) \
+            .withColumn("c_c2", col("c.c2")) \
+            .select("a", "b", "c_c1", "c_c2")
+df_flat.show()
+df_flat.printSchema()
+
+# mysql'e yazma
+df_flat.write.format("jdbc") \
+    .option("url", "jdbc:mysql://mysql_db_spark:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true") \
+    .option("driver", "com.mysql.cj.jdbc.Driver") \
+    .option("dbtable", "explode_table") \
+    .option("user", "sahibinden") \
+    .option("password", "sahibinden") \
+    .mode("append") \
+    .save()
+```
