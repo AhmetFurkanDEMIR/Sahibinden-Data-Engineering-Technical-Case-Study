@@ -1,20 +1,20 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode
+from pyspark.sql.functions import col, explode, row_number
 from pyspark import SparkContext,SparkConf
-    
-conf = SparkConf().set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.12:10.2.0")
+from pyspark.sql.window import Window
+
+conf = SparkConf().set("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.12:10.4.1")
 sc = SparkContext(conf=conf)
 
 # Spark Session oluşturma
 spark = SparkSession.builder \
     .appName("MongoDB to SQL") \
     .master("spark://spark-master:7077") \
-    .config('spark.jars.packages', 'org.mongodb.spark:mongo-spark-connector_2.12:10.2.0,mysql:mysql-connector-java:8.0.33')\
-    .config("spark.mongodb.input.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
-    .config("spark.mongodb.output.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
-    .config("spark.mongodb.read.connection.uri", "mongodb://mongodb:27017/sahibinden") \
-    .config("spark.mongodb.write.connection.uri", "mongodb://mongodb:27017/sahibinden") \
-    .config("spark.driver.memory", "15g") \
+    .config('spark.jars.packages', 'org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33')\
+    .config("spark.mongodb.read.connection.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
+    .config("spark.mongodb.write.connection.uri", "mongodb://mongodb:27017/sahibinden.collection1") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.cores.max", 2) \
     .getOrCreate()
 
 
@@ -28,13 +28,19 @@ df = spark.read \
 
 df.show()
 
-"""
 df.printSchema()
 
 df_flat = df.withColumn("c", explode(col("c"))) \
             .withColumn("c_c1", col("c.c1")) \
             .withColumn("c_c2", col("c.c2")) \
             .select("a", "b", "c_c1", "c_c2")
+
+window_spec = Window.partitionBy("a", "b").orderBy("c_c1")
+
+
+df_flat = df_flat.withColumn("row_num", row_number().over(window_spec)) \
+                   .filter(col("row_num") == 1) \
+                   .drop("row_num")
 
 df_flat.show()
 
@@ -50,5 +56,3 @@ df_flat.write.format("jdbc") \
     .option("password", "sahibinden") \
     .mode("append") \
     .save()
-
-"""

@@ -4,7 +4,7 @@ services:
 
   ### --- SPARK SERVICES ---- ###
   spark-master:
-    image: bitnami/spark:3.5.0
+    image: bitnami/spark:latest
     container_name: spark-master
     hostname: spark-master
     environment:
@@ -26,7 +26,7 @@ services:
       - spark-network
 
   spark-worker-1:
-    image: bitnami/spark:3.5.0
+    image: bitnami/spark:latest
     container_name: spark-worker-1
     hostname:  spark-worker-1
     environment:
@@ -46,7 +46,7 @@ services:
       - spark-network
 
   spark-worker-2:
-    image: bitnami/spark:3.5.0
+    image: bitnami/spark:latest
     container_name: spark-worker-2
     hostname:  spark-worker-2
     environment:
@@ -99,13 +99,14 @@ services:
       - spark-network
 
   spark-submiter:
-    image: bitnami/spark:3.5.0
+    image: bitnami/spark:latest
     container_name: spark-submiter
     depends_on:
       - mysql_db_spark
       - spark-master
       - mongodb
-    command: [ "/bin/bash", "-c", "spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.2.0,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.input.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.output.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden /opt/spark_scripts/spark_submit.py" ]
+    command: >
+      bash -c "sleep 15 && spark-submit --master spark://spark-master:7077 --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,mysql:mysql-connector-java:8.0.33 --conf spark.mongodb.read.connection.uri=mongodb://mongodb:27017/sahibinden --conf spark.mongodb.write.connection.uri=mongodb://mongodb:27017/sahibinden /opt/spark_scripts/spark_submit.py"
     volumes:
       - ./spark_submit.py:/opt/spark_scripts/spark_submit.py
     networks:

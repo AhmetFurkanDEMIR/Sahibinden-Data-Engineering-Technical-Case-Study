@@ -2,7 +2,7 @@
 
 ### **Gereklilikler**
 
-![druid](/readme_images/docker.png)
+![docker](/readme_images/docker.png)
 
 Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması gerekmektedir. [Kurulum linki (Ubuntu için)](https://docs.docker.com/engine/install/ubuntu/)
 
@@ -17,9 +17,9 @@ Yazılan tüm kodlar ve servisler, otomatik olarak Docker ile deploy edilecek ş
 [**1.b.**](/MySQL_Debezium/) Buradaki kafka topiclerinde girilen mysql-debezium mesajlarını bir structured DB'ye nasıl upset/merge etmeyi düşünürsünüz, kırılma yaşayacabileceğimiz noktalar nereleri olur, çözüm yaklaşımlarınızı paylaşabilir misiniz? Sözel/text cevap veriniz.
 
 
-## 2-) Spark ve MongoDB
+## 2-) [Spark ve MongoDB](/Spark_MongoDB/)
 
-**2.a.** Spark ile mongo dbden veri okuyup yazma:
+[**2.a.**](/Spark_MongoDB/) Spark ile mongo dbden veri okuyup yazma:
 
 ```sql
 CREATE TABLE collection1 (
@@ -42,7 +42,7 @@ CREATE TABLE sql_table(
 
 şeklinde bir tabloya 3 satır olarak insert edebilir misiniz?
 
-**2.b.** Burada 500M'luk bir veri seti olsaydı, bu Spark jobını hangi ortamda nasıl çalıştırırdınız, yaklaşımınız ne olurdu? Sözel/text cevap veriniz.
+[**2.b.**](/Spark_MongoDB/) Burada 500M'luk bir veri seti olsaydı, bu Spark jobını hangi ortamda nasıl çalıştırırdınız, yaklaşımınız ne olurdu? Sözel/text cevap veriniz.
 
 
 ## 3-) Flink ve Kafka
