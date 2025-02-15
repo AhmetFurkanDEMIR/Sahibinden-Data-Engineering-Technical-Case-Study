@@ -331,3 +331,29 @@ df_flat.write.format("jdbc") \
     .mode("append") \
     .save()
 ```
+
+# **2.b.** 
+### **Burada 500M'luk bir veri seti olsaydı, bu Spark jobını hangi ortamda nasıl çalıştırırdınız, yaklaşımınız ne olurdu? Sözel/text cevap veriniz.**
+
+Çalıştığım şirket olan [Nesine](https://www.nesine.com/)’de, milyonlarca satır veriyi Spark’ı cluster modunda kullanarak işliyoruz.
+
+Prod ve Stage Kubernetes cluster’larında, [Helm](https://artifacthub.io/packages/helm/bitnami/spark) üzerinden Bitnami Spark dağıtımını kullanarak Spark cluster’ını kuruyoruz. Bu cluster’ın CPU, bellek (Memory) ve JVM konfigürasyonlarını, işlediğimiz verinin büyüklüğüne ve makinelerin donanım özelliklerine göre optimize ediyoruz.
+
+PySpark kodlarımızı client modunda submit ediyoruz ve çalışacak job için CPU ve bellek (RAM) konfigürasyonlarını, veri boyutuna ve gerçekleştirilecek işleme göre optimize ediyoruz.
+
+Aşağıda, PySpark job'unu client modunda submit etmek için örnek bir yapılandırılmış spark-submit komutu bulunuyor:
+
+```yaml
+spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
+  --conf spark.executor.instances=4 \
+  --conf spark.executor.cores=2 \
+  --conf spark.executor.memory=8g \
+  --conf spark.driver.memory=4g \
+  local:///path/to/your_script.py
+```
+
+Kod içerisinde Partitioning ve Parallelism ayarlamalarını yapıyor, veri formatı olarak ORC veya Parquet seçiyor ve clean code prensiplerine uygun şekilde kodlama yapıyoruz.
+
+Bu cluster yapısı ve optimize edilmiş PySpark kodları ile milyonlarca satır veriyi işleyip hedef tabloya aktaran Spark jobları oluşturdum ve başarıyla çalıştırmaktayım.
