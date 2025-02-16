@@ -279,4 +279,117 @@ command: >
 ```
 
 
-### **[](/Flink_Kafka/flink-submit.py)**
+### **[flink-submit.py](/Flink_Kafka/flink-submit.py)**
+
+Bağımlı olduğu Jar paketlerini dahil etmek.
+
+```python
+jars_path = "/opt/flink/lib/"
+
+jar_files = [
+    "file:///" + jars_path + "flink-sql-connector-kafka-3.4.0-1.20.jar",
+    "file:///" + jars_path + "kafka-clients-3.6.1.jar"
+]
+jar_files_str = ";".join(jar_files)
+```
+
+Bu kod, PyFlink ile bir Stream Execution Environment (çalıştırma ortamı) oluşturur, harici JAR dosyalarını yükler ve SQL işlemleri için bir Table Environment (tablo ortamı) başlatır.
+
+```python
+env = StreamExecutionEnvironment.get_execution_environment()
+env.add_jars(jar_files_str)
+
+settings = EnvironmentSettings.in_streaming_mode()
+table_env = TableEnvironment.create(settings)
+```
+
+Bu kod, Flink'in Kafka bağlayıcısını kullanarak "sahibinden" adlı bir tablo oluşturur, JSON formatındaki verileri Kafka'dan okur, KDV hesaplaması yapar ve zaman bazlı işlemler için watermark ekler.
+
+```python
+topic = "sahibinden"
+group = "flink-group-sahibinden"
+kafka_bootstrap_server = "kafka-flink:9092"
+offset = 'earliest-offset'
+
+table_env.execute_sql("""
+    CREATE TABLE sahibinden (
+        id INT,
+        product STRING,
+        description STRING,
+        price BIGINT,
+        kdv DOUBLE,
+        price_with_kdv AS (price * (1 + kdv)),
+        timestamp_column TIMESTAMP(3),
+        WATERMARK FOR timestamp_column AS timestamp_column - INTERVAL '5' SECOND
+    ) WITH (
+        'connector' = 'kafka',
+        'topic' = '{0}',
+        'properties.bootstrap.servers' = '{1}',
+        'properties.group.id' = '{2}',
+        'scan.startup.mode' = '{3}',
+        'value.format' = 'json'
+    )
+""".format(topic, kafka_bootstrap_server, group, offset))
+```
+
+Bu kod, "sahibinden" tablosundaki verileri 2 dakikalık zaman pencereleri (TUMBLE) ile gruplayarak her pencere için id, product, description, price, kdv, price_with_kdv değerlerini döndürür ve pencerenin başlangıç zamanını (window_start) hesaplar.
+
+```python
+windowed_table = table_env.sql_query("""
+    SELECT 
+        id,
+        product,
+        description,
+        price,
+        kdv,
+        price_with_kdv,
+        TUMBLE_START(timestamp_column, INTERVAL '2' MINUTE) AS window_start
+    FROM 
+        sahibinden
+    GROUP BY 
+        TUMBLE(timestamp_column, INTERVAL '2' MINUTE), id, product, description, price, kdv, price_with_kdv
+""")
+```
+
+Bu kod, Flink'in dosya sistemi bağlayıcısını (filesystem) kullanarak verileri CSV formatında /opt/flink/data dizinine yazacak bir "write_csv" tablosu oluşturur ve her satırın virgülle ayrılmasını (csv.field-delimiter = ',') sağlar.
+
+```python
+table_env.execute_sql("""
+    CREATE TABLE write_csv (
+        id INT,
+        product STRING,
+        description STRING,
+        price BIGINT,
+        kdv DOUBLE,
+        price_with_kdv DOUBLE,
+        window_start TIMESTAMP 
+    ) WITH (
+        'connector' = 'filesystem',
+        'format' = 'csv',
+        'path' = 'file:///opt/flink/data',
+        'csv.field-delimiter' = ',',
+        'csv.ignore-parse-errors' = 'true',
+        'csv.record-row-delimiter' = '\n'
+    )
+""")
+```
+
+Bu kod, "sahibinden" tablosundaki verileri 2 dakikalık zaman pencereleriyle gruplayarak "write_csv" tablosuna (CSV dosyasına) yazar ve her pencere için window_start zaman damgasını ekler.
+
+```python
+table_env.execute_sql("""
+    INSERT INTO write_csv
+    SELECT 
+        id,
+        product,
+        description,
+        price,
+        kdv,
+        price_with_kdv,
+        TUMBLE_START(timestamp_column, INTERVAL '2' MINUTE) AS window_start
+    FROM 
+        sahibinden
+    GROUP BY 
+        TUMBLE(timestamp_column, INTERVAL '2' MINUTE), id, product, description, price, kdv, price_with_kdv
+""")
+```
