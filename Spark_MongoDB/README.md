@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS explode_table (
 );
 ```
 
-Son aşama olarak spark-submiter ile [spark_submit.py](/Spark_MongoDB/spark_submit.py) dosyası Spark clusterına submit edilir. Spark, MongoDB deki verileri okuyup işlemleri tamamlandıktan sonra MySQL de ki testdb.explode_table'a yazma işlemini yapar.
+Son aşama olarak spark-submitter ile [spark_submit.py](/Spark_MongoDB/spark_submit.py) dosyası Spark clusterına submit edilir. Spark, MongoDB deki verileri okuyup işlemleri tamamlandıktan sonra MySQL de ki testdb.explode_table'a yazma işlemini yapar.
 
 ![explode_table](/readme_images/explode_table.png)
 
@@ -94,7 +94,7 @@ MySQL de ki explode_table'i görmek için Cloudbeaver linkine tıklayınız. [ht
 * **1-)** MySQL servisinin deploy edilmesi ve tablonun oluşturulması
 * **2-)** MongoDB'nin deploy edilmesi ve verilerin insert edilmesi
 * **3-)** 1 master ve 2 worker Spark clusterının deploy edilmesi
-* **4-)** Spark-submiter ile [spark_submit](/Spark_MongoDB/spark_submit.py) scriptinin client modunda submit edilmesi
+* **4-)** Spark-submitter ile [spark_submit](/Spark_MongoDB/spark_submit.py) scriptinin client modunda submit edilmesi
 * **5-)** spark_submit.py içindeki işlemler ile MongoDB verilerini explode edip MySQL deki tabloya verilerin yazılması
 
 ## Mimariyi inceleme ve açıklamalar
@@ -264,12 +264,12 @@ Her worker için 8 CPU ve 16GB memory ayarlanmıştır.
 - Spark master web url: [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
 - Spark master url: spark://spark-master:7077
 
-### **Spark Submiter**
+### **Spark submitter**
 
 ```yaml
-spark-submiter:
+spark-submitter:
     image: bitnami/spark:latest
-    container_name: spark-submiter
+    container_name: spark-submitter
     depends_on:
       - mysql_db_spark
       - spark-master

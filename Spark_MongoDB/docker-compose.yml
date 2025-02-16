@@ -98,9 +98,9 @@ services:
     networks:
       - spark-network
 
-  spark-submiter:
+  spark-submitter:
     image: bitnami/spark:latest
-    container_name: spark-submiter
+    container_name: spark-submitter
     depends_on:
       - mysql_db_spark
       - spark-master
