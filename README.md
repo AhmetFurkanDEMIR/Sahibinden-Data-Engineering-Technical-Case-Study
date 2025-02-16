@@ -14,7 +14,12 @@ Private GitHub Repo Link: Geliştirme sürecimi Git versiyon kontrol sistemi üz
 
 ![docker](/readme_images/docker.png)
 
-Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması gerekmektedir. [Kurulum linki (Ubuntu için)](https://docs.docker.com/engine/install/ubuntu/)
+Uygulamaların çalışacağı cihazda docker ve docker compose kurulu olması gerekmektedir. 
+
+[Kurulum linki (Ubuntu için)](https://docs.docker.com/engine/install/ubuntu/)
+
+[Kurulum linki (Windows için)](https://docs.docker.com/desktop/setup/install/windows-install/)
+
 
 Docker'ı kullanmamın sebebi, Case çalışmasını çalıştıracak kişinin bilgisayarında sorunsuz bir şekilde çalışmasını sağlamaktır. Hem platform bağımsız olarak hatasız çalışmasını sağlamak hem de yazılan uygulamaların daha sonrasında Docker Swarm ve Kubernetes üzerinde deploy edilmesini kolaylaştırmaktır.
 
