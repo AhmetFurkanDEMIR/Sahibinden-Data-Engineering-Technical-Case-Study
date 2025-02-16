@@ -397,3 +397,18 @@ table_env.execute_sql("""
 # **3.b.** 
 
 ### **Çok yüklü ama gün içinde dalgalan sıklıkta veri akışı olan bir akışta; zaman ve adet bazlı yazma politikanız nasıl olurdu. Çıkabilkecek ne tür senaryolar olurdu, hangi konfigüsayonlarla yönetirdiniz?**
+
+Spark'ta olduğu gibi, Kubernetes üzerinde bir [Flink](https://artifacthub.io/packages/helm/flink/flink) cluster oluştururdum. JobManager ve TaskManager bileşenlerini, veri boyutuna ve iş yüküne göre optimize ederdim.
+
+Performans odaklı çalışmak için kodları Java ile yazardım. Paralellik seviyesini doğru ayarlayarak işlem verimliliğini artırır, clean code prensiplerine dikkat ederdim.
+
+#### Senaryo ve Çözüm
+
+## Senaryo ve Çözüm
+
+| **Senaryo**             | **Çözüm**                                                        |
+|-------------------------|------------------------------------------------------------------|
+| Ani veri artışı         | **Dynamic Scaling (autoscale)**: Sistemin otomatik olarak ölçeklenmesini sağlamak ve kaynakları artırmak. **Kafka partitions artırma**: Kafka topic'lerine daha fazla partition ekleyerek veri akışını daha verimli yönetmek. Bu, ani veri artışlarını karşılamak için etkili bir çözüm. |
+| Dengesiz veri akışı     | **Adaptive mini-batch (table.exec.mini-batch.size)**: Veriyi küçük mini-batch'lere ayırarak her batch'te belirli bir öğe sayısına ulaşılana kadar işleme işlemini durduruyorum. Bu, kaynak kullanımını optimize eder ve veri akışındaki dengesizlikleri yönetmeye yardımcı olur. |
+| Geç gelen veriler       | **Event Time + Watermark stratejisi**: Verilerin doğru sıralamayla işlenmesi için Event Time kullanarak geç gelen verilerin doğru bir şekilde işlenmesini sağlıyorum. Watermark’lar, geç gelen verilerin kaybolmasını engeller ve zaman serisi işlemlerinin tutarlılığını korur. |
+| Backpressure            | **Sink paralelliğini artırma**: Backpressure oluştuğunda, sink işlemlerinin paralel çalışmasını artırarak veri yazma hızını optimize ediyorum. Bu, tıkanıklıkların önüne geçer ve verilerin daha hızlı işlenmesini sağlar. |
