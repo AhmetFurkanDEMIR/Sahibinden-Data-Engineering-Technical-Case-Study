@@ -2,7 +2,7 @@
 
 ### **Proje hakkında**
 
-Bu Proje Sahibinden.com Data engineer Case çalışmasıdır. Orjinal Case çalışma [dokümanı](/Senior_Data_Enginer_Ankara_Case.doc)
+Bu Proje [Sahibinden.com](https://sahibinden.com/) Data engineer Case çalışmasıdır. Orjinal Case çalışma [dokümanı](/Senior_Data_Enginer_Ankara_Case.doc)
 
 Projedeki açıklamalar ve işlemler README.md dosyasına yazılmıştır. Görüntü ve daha iyi bir gösterim için bu dosyaları Visual Studio Code üzerinden görüntüleyebilirsiniz.
 
