@@ -46,3 +46,32 @@ Son olarak Flink Submitter adlı container [flink-submit.py](/Flink_Kafka/flink-
 ![flink_running_job](/readme_images/flink_running_job.png)
 
 Yukarıdaki resimde görüleceği üzere Job'un başladığını ve running durumunda olduğunu görebilirsiniz.
+
+Job başladıktan sonra otomatik olarak [/Flink_Kafka/out_data/](/Flink_Kafka/out_data/) klasörü altında .part-xxxx adında dosya oluşacaktır.
+
+![file_output](/readme_images/file_output.png)
+
+Bu dosyanın içerisinde csv formatına uygun olarak "," ile ayrılmış ve işlem görmüş verileri görebilirsiniz.
+
+![part_data](/readme_images/part_data.png)
+
+girdi veri:
+
+```json
+{
+	"id": 7,
+	"product": "Televizyon",
+	"description": "ikinci el LG OLED TV",
+	"price": 18000,
+	"kdv": 0.18,
+	"timestamp_column": "2025-02-16 07:29:49"
+}
+```
+
+çıktı veri:
+
+```csv
+7,Televizyon,"ikinci el LG OLED TV",18000,0.18,21240.0,"2025-02-16 07:40:00"
+```
+
+girdi veride (price * (1 + kdv)) değerini hesaplar ve dosyaya yazar. 
