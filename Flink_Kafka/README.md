@@ -155,11 +155,16 @@ Jobmanager uı: [http://0.0.0.0:8081](http://0.0.0.0:8081)
 
 ![](/readme_images/flink_ui.png)
 
-Jobmanager'a Job gönderme komutu: flink run -m jobmanager:8081 -py script.py
+Jobmanager'a Job gönderme komutu: 
+
+```yaml
+flink run -m jobmanager:8081 -py script.py
+```
+
+Bu configle 16 task slotu ayarlanmıştır.
 
 ```yaml
 taskmanager.numberOfTaskSlots: 16 
-#bu configle 16 task slotu ayarlanmıştır.
 ```
 
 Volume ayarlayarak Job'un çıktılarını lokal dizininizde görmeniz sağlanmıştır. [out_data](/Flink_Kafka/out_data/)
