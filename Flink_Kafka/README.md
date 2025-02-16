@@ -31,17 +31,17 @@ Eğer ilk kez çalıştırıyorsanız, Docker Hub üzerinden ihtiyaç duyulan im
 
 Docker imajları otomatik olarak ayağa kalkıp işlemleri başlatacaktır.
 
-İlk olarak Kafka tek broker olarak ayağa kalkar ver ![](/Flink_Kafka/producer/kafka_producer.py) python scripti ile kafkaya veri yazar.
+İlk olarak Kafka tek broker olarak ayağa kalkar ver ![](/Flink_Kafka/producer/kafka_producer.py) python scripti ile Kafka'ya veri yazar.
 
 [KafkaUI](http://0.0.0.0:8089/ui/clusters/kafka/all-topics?perPage=25)
 
 ![](/readme_images/flink_kafka_ui.png)
 
-Ardından Flink jobmanager ve taskmanager ayağa kalkar birbirleriyle iletişim kurar ve cluster oluşturur.
+Ardından Flink jobmanager ve taskmanager ayağa kalkar ve birbirleriyle iletişim kurarak bir cluster oluşturur.
 
 ![flink_ui](/readme_images/flink_ui.png)
 
-Son olarak Flink Submitter adlı container [flink-submit.py](/Flink_Kafka/flink-submit.py) python scriptini run komutu ile jobmanager'a iletir ve job'u başlatır.
+Son olarak Flink Submitter adlı container [flink-submit.py](/Flink_Kafka/flink-submit.py) Python scriptini run komutu ile Jobmanager'a iletir ve job'u başlatır.
 
 ![flink_running_job](/readme_images/flink_running_job.png)
 
