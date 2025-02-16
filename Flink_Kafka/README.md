@@ -404,8 +404,6 @@ Performans odaklı çalışmak için kodları Java ile yazardım. Paralellik sev
 
 #### Senaryo ve Çözüm
 
-## Senaryo ve Çözüm
-
 | **Senaryo**             | **Çözüm**                                                        |
 |-------------------------|------------------------------------------------------------------|
 | Ani veri artışı         | **Dynamic Scaling (autoscale)**: Sistemin otomatik olarak ölçeklenmesini sağlamak ve kaynakları artırmak. **Kafka partitions artırma**: Kafka topic'lerine daha fazla partition ekleyerek veri akışını daha verimli yönetmek. Bu, ani veri artışlarını karşılamak için etkili bir çözüm. |
