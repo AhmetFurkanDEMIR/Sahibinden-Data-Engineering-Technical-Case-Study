@@ -74,4 +74,15 @@ girdi veri:
 7,Televizyon,"ikinci el LG OLED TV",18000,0.18,21240.0,"2025-02-16 07:40:00"
 ```
 
-girdi veride (price * (1 + kdv)) değerini hesaplar ve dosyaya yazar. 
+girdi veri de (price * (1 + kdv)) değerini hesaplar ve dosyaya yazar. 
+
+
+## Uygulamanın çalışma adımları
+
+* **1-)** Kafka tek broker olarak ayağa kalkar ve producer containerı kafka topiğine veri girer
+* **2-)** Flink Jobmanager ve Taskmanager çalışır iletişimi kurar ve Flink clusterı oluşur
+* **3-)** Flink submitter [flink-submit](/Flink_Kafka/flink-submit.py) python scriptini run ile Jobmanager'a iletir ve Job başlatılır.
+* **4-)** Python scripti içinde Kafka dan veri okunur, KDV hesaplaması yapılır
+* **5-)** TUMBLE windowing (pencereleme) fonksiyonu ile veriler 2 dklık guruplara ayrılır ve veri biriktirilir
+* **6-)** write_csv adında tablo oluşturulur ve bu tablo connector: filesystem, format:csv ve path:file:///opt/flink/data yapılandırması yapılır. Tabloya girilen her veri file:///opt/flink/data altındaki dosyaya yazılır.
+* **7-)** Ve son olarak bu TUMBLE veriler write_csv tablosuna insert edilir ve lokal dosya sistemine yazılır.
