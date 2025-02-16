@@ -39,6 +39,8 @@ Docker imajları otomatik olarak ayağa kalkıp işlemleri başlatacaktır.
 
 Ardından Flink jobmanager ve taskmanager ayağa kalkar ve birbirleriyle iletişim kurarak bir cluster oluşturur.
 
+Jobmanager UI: [http://0.0.0.0:8081](http://0.0.0.0:8081)
+
 ![flink_ui](/readme_images/flink_ui.png)
 
 Son olarak Flink Submitter adlı container [flink-submit.py](/Flink_Kafka/flink-submit.py) Python scriptini run komutu ile Jobmanager'a iletir ve job'u başlatır.
@@ -392,6 +394,14 @@ table_env.execute_sql("""
     GROUP BY 
         TUMBLE(timestamp_column, INTERVAL '2' MINUTE), id, product, description, price, kdv, price_with_kdv
 """)
+```
+
+### **Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
+
+```yaml
+docker compose down
+
+# or docker-compose down
 ```
 
 # **3.b.** 
