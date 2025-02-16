@@ -393,3 +393,7 @@ table_env.execute_sql("""
         TUMBLE(timestamp_column, INTERVAL '2' MINUTE), id, product, description, price, kdv, price_with_kdv
 """)
 ```
+
+# **3.b.** 
+
+### **Çok yüklü ama gün içinde dalgalan sıklıkta veri akışı olan bir akışta; zaman ve adet bazlı yazma politikanız nasıl olurdu. Çıkabilkecek ne tür senaryolar olurdu, hangi konfigüsayonlarla yönetirdiniz?**
