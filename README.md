@@ -51,6 +51,8 @@ CREATE TABLE sql_table(
 
 ## 3-) [Flink ve Kafka](/Flink_Kafka/)
 
+![flink_kafka_mimari](/readme_images/flink_kafka_mimari.png)
+
 [**3.a.**](/Flink_Kafka/) Apache Flink ile Kafka entegrasyonu yapıp, Kafka'dan JSON veri okuyup bu veriyi bazı hesaplamalar yaptıktan sonra 2 dakikada bir sonucu  local dosya sistemine csv olarak yazan pipeline oluşturun, örnek implementasyon yapar mısınız?
 
 [**3.b.**](/Flink_Kafka/) Çok yüklü ama gün içinde dalgalan sıklıkta veri akışı olan bir akışta; zaman ve adet bazlı yazma politikanız nasıl olurdu. Çıkabilkecek ne tür senaryolar olurdu, hangi konfigüsayonlarla yönetirdiniz?
