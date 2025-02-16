@@ -142,7 +142,7 @@ Yukarıdaki yaml dosyasında okunacağı üzere tüm servislerin sağlıklı ça
 
 Yukarıdaki yaml da Jobmanager ve Task manager yapısını görebilirsiniz.
 
-Imajı [PyFlink](/Flink_Kafka/PyFlink/) altındaki Dockerfile ile derler. Imaj içinde Python kurulumu Kafka bağlantısı için jar paketleri ve apache-flink kurulumu yapmaktadır, bu gereklilikler flink jobumuzun sağlıklı çalışmasını sağlamaktadır.
+Imajı [PyFlink](/Flink_Kafka/PyFlink/Dockerfile) altındaki Dockerfile ile derler. Imaj içinde Python kurulumu Kafka bağlantısı için jar paketleri ve apache-flink kurulumu yapmaktadır, bu gereklilikler flink jobumuzun sağlıklı çalışmasını sağlamaktadır.
 
 **Jars:**
 - [flink-sql-connector-kafka-3.4.0-1.20.jar](https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.4.0-1.20/flink-sql-connector-kafka-3.4.0-1.20.jar)
