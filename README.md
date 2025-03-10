@@ -6,10 +6,6 @@ Bu Proje [Sahibinden.com](https://sahibinden.com/) Data engineer Case çalışma
 
 Projedeki açıklamalar ve işlemler README.md dosyasına yazılmıştır. Görüntü ve daha iyi bir gösterim için bu dosyaları Visual Studio Code üzerinden görüntüleyebilirsiniz.
 
-Web de görüntülemek için (sadece bağlantı sahipleri görüntüleyebilir): [https://gitfront.io/r/fdemir/MoSJUFRR6eNZ/Sahibinden-Data-Engineering-Technical-Case-Study/](https://gitfront.io/r/fdemir/MoSJUFRR6eNZ/Sahibinden-Data-Engineering-Technical-Case-Study/)
-
-Private GitHub Repo Link: Geliştirme sürecimi Git versiyon kontrol sistemi üzerinden gözlemlemek isterseniz, bana [mail](mailto:1ahmetfurkandemir@gmail.com) atarak GitHub kullanıcı adınıza özel erişim verebilirim. [https://github.com/AhmetFurkanDEMIR/Sahibinden-Data-Engineering-Technical-Case-Study](https://github.com/AhmetFurkanDEMIR/Sahibinden-Data-Engineering-Technical-Case-Study)
-
 ### **Gereklilikler**
 
 ![docker](/readme_images/docker.png)
