@@ -113,6 +113,14 @@ Yukarıda mysql servisinin yapılandırmasını görebilirsiniz. Mysql docker im
 command: --default-authentication-plugin=mysql_native_password --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --binlog-row-image=FULL
 ```
 
+**--log-bin=mysql-bin:** Binary Log (Binlog) etkinleştirilir ve mysql-bin adlı bir dosyaya yazılır.
+
+**MySQL binlog (binary log)**, MySQL sunucusundaki veritabanı değişikliklerini (DML ve DDL işlemleri) kaydeden ikili (binary) bir log dosyasıdır. Replikasyon, veri kurtarma ve audit işlemleri için kullanılır.
+
+**--binlog-format=ROW:** ROW formatında, SQL komutları yerine doğrudan tablo satırları kaydedilir.
+
+**--binlog-row-image=FULL:** Binary log içinde, değişiklik yapılan satırın tamamının kaydedileceğini belirtir.
+
 Bu command ile mysql de bulunan testdb için CDC aktif hale getirmektedir.
 
 - MySQL host: 0.0.0.0:3306
@@ -269,41 +277,41 @@ create-debezium-connector imajı sayesinde, kendi uygulamam için yapılandırı
 }
 ```
 
-- name: Connector'ın adı. Bu örnekte "mysql-sahibinden-connector".
+- **name:** Connector'ın adı. Bu örnekte "mysql-sahibinden-connector".
 
-- connector.class: Kullanılacak Debezium connector tipi. Burada MySQL için io.debezium.connector.mysql.MySqlConnector kullanılıyor.
+- **connector.class:** Kullanılacak Debezium connector tipi. Burada MySQL için io.debezium.connector.mysql.MySqlConnector kullanılıyor.
 
-- tasks.max: Maksimum paralel görev sayısı. 
+- **tasks.max:** Maksimum paralel görev sayısı. 
 
-- database.hostname: Veritabanı sunucusunun adresi. 
+- **database.hostname:** Veritabanı sunucusunun adresi. 
 
-- database.port: MySQL veritabanının portu. Varsayılan olarak 3306 kullanılır.
+- **database.port:** MySQL veritabanının portu. Varsayılan olarak 3306 kullanılır.
 
-- database.user: Veritabanı bağlantısı için kullanıcı adı.
+- **database.user:** Veritabanı bağlantısı için kullanıcı adı.
 
-- database.password: Veritabanı kullanıcı şifresi.
+- **database.password:** Veritabanı kullanıcı şifresi.
 
-- database.server.id: Veritabanı sunucusunun benzersiz ID'si.
+- **database.server.id:** Veritabanı sunucusunun benzersiz ID'si.
 
-- database.server.name: Kafka topic prefix'i olarak kullanılacak sunucu adı.
+- **database.server.name:** Kafka topic prefix'i olarak kullanılacak sunucu adı.
 
-- database.whitelist: İzlenecek veritabanları. Burada yalnızca "testdb" veritabanı izleniyor.
+- **database.whitelist:** İzlenecek veritabanları. Burada yalnızca "testdb" veritabanı izleniyor.
 
-- database.history.kafka.bootstrap.servers: Kafka sunucusunun adresi.
+- **database.history.kafka.bootstrap.servers:** Kafka sunucusunun adresi.
 
-- database.history.kafka.topic: Veritabanı geçmişi bilgilerini saklayacak Kafka topic adı.
+- **database.history.kafka.topic:** Veritabanı geçmişi bilgilerini saklayacak Kafka topic adı.
 
-- table.whitelist: İzlenecek tablo. Bu örnekte "testdb.sahibinden" tablosu izlenecek.
+- **table.whitelist:** İzlenecek tablo. Bu örnekte "testdb.sahibinden" tablosu izlenecek.
 
-- database.history.producer.bootstrap.servers: Kafka'ya bağlanacak olan producer'ın sunucu adresi.
+- **database.history.producer.bootstrap.servers:** Kafka'ya bağlanacak olan producer'ın sunucu adresi.
 
-- database.history.producer.topic: Veritabanı geçmişi için kullanılan Kafka topic adı.
+- **database.history.producer.topic:** Veritabanı geçmişi için kullanılan Kafka topic adı.
 
-- topic.prefix: Kafka topic adı için ön ek. Bu örnekte "mysql"
+- **topic.prefix:** Kafka topic adı için ön ek. Bu örnekte "mysql"
 
-- schema.history.internal.kafka.bootstrap.servers: Schema geçmişi için Kafka sunucusu.
+- **schema.history.internal.kafka.bootstrap.servers:** Schema geçmişi için Kafka sunucusu.
 
-- schema.history.internal.kafka.topic: Schema geçmişi için Kafka topic adı.
+- **schema.history.internal.kafka.topic:** Schema geçmişi için Kafka topic adı.
 
 ### **Uygulama ile işiniz bittikten sonra containerları control+c (command+c) ile durdurup docker compose down ile down ediniz.**
 

@@ -31,7 +31,7 @@ Eğer ilk kez çalıştırıyorsanız, Docker Hub üzerinden ihtiyaç duyulan im
 
 Docker imajları otomatik olarak ayağa kalkıp işlemleri başlatacaktır.
 
-İlk olarak Kafka tek broker olarak ayağa kalkar ver ![](/Flink_Kafka/producer/kafka_producer.py) python scripti ile Kafka'ya veri yazar.
+İlk olarak Kafka tek broker olarak ayağa kalkar ve ![](/Flink_Kafka/producer/kafka_producer.py) python scripti ile Kafka'ya veri yazar.
 
 [KafkaUI](http://0.0.0.0:8089/ui/clusters/kafka/all-topics?perPage=25)
 
